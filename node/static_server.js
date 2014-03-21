@@ -3,7 +3,7 @@ var http = require("http"),
     path = require("path"),
     fs = require("fs");
 
-exports.start = function(port){
+exports.start = function(config){
 	http.createServer(function(request, response) {
 	  var uri = url.parse(request.url).pathname
 	    , filename = path.join(process.cwd(), uri);
@@ -30,5 +30,5 @@ exports.start = function(port){
 	      response.end();
 	    });
 	  });
-	}).listen(parseInt(port, 10));
+	}).listen(parseInt(config.staticFileServerPort, 10), config.staticHost);
 }

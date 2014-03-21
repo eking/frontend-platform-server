@@ -8,16 +8,16 @@ var http = require('http')
 	, handler = require('./handler');
 
 /**
- * Handler包装器
- * @param  {[type]} handler [响应函数]
+ * Will called before handler excution
+ * @param  {[type]} handler
  * @param  {[type]} req     [http request]
  * @param  {[type]} resp    [http response]
  */
 function actionWrapper(handler, req, resp){
-	var renderData = handler(req, resp, function(err, renderData){
+	handler(req, resp, function(err, renderData){
 		if(err){
-			resp.writeHead(500, {'Content-Type' : 'text/html'});
-			resp.end(err);
+			resp.writeHead(500, {'Content-Type' : 'text/plain'});
+			resp.end(err+'');
 			return;
 		}
 		onResponse(req, resp, renderData);
@@ -25,10 +25,9 @@ function actionWrapper(handler, req, resp){
 }
 
 /**
- * 前置过滤器，Handler执行前调用
+ * All request start here
  * @param  {[type]} req        [http request]
  * @param  {[type]} resp       [http response]
- * @param  {[type]} renderData [view name and rendered data]
  */
 function onRequest(req, resp){
 	var keyWithMethod = req.method.toLowerCase()+':'+req.url;
@@ -39,26 +38,34 @@ function onRequest(req, resp){
 		actionWrapper(handler[router[keyWithMethod]], req, resp);
 	}else{
 		resp.writeHead(404, {'Content-Type' : 'text/html'});
-		resp.end('<h1>404</h1>找不到页面');
+		resp.end('<h1>404</h1> not found');
 	}
 }
 
 /**
- * 后置过滤器，Handler执行完毕调用
+ * Will called after handler excution
  * @param  {[type]} req        [http request]
  * @param  {[type]} resp       [http response]
  * @param  {[type]} renderData [view name and rendered data]
  */
 function onResponse(req, resp, renderData){
-	var data = renderData.data || {};
-	data['static'] = staticServerPrefix;
-
-
-	if(!renderData.view){
+	// undefined view
+	if(!renderData.view && !renderData.data){
 		resp.writeHead(500, {'Content-Type' : 'text/html'});
-		resp.end('<h1>500</h1>未找到模板');
+		resp.end('<h1>500</h1> template not found');
+		return;
 	}
 
+	// return json
+	if(!renderData.view && renderData.data){
+		resp.writeHead(200, {'Content-Type' : 'text/plain'});
+		resp.end(JSON.stringify(renderData.data));
+		return;
+	}
+
+	// render template
+	var data = renderData.data || {};
+	data['static'] = staticServerPrefix;
 	ejs.renderFile('./template/'+renderData.view+'.ejs', data, function(err, html){
 		if(err){
 			resp.writeHead(500, {'Content-Type' : 'text/plain'});
@@ -70,6 +77,6 @@ function onResponse(req, resp, renderData){
 }
 
 exports.start = function(option){
-	http.createServer(onRequest).listen(option.serverPort, option.host);
-	staticServerPrefix = option.staticHost + ':' + option.staticFileServerPort + '/static';
+	http.createServer(onRequest).listen(option.serverPort, option.serverHost);
+	staticServerPrefix = '//' + option.staticHost + ':' + option.staticFileServerPort + '/static';
 }

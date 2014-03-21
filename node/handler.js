@@ -7,24 +7,24 @@ exports.index = function(req, resp, end){
 
 exports.upload = function(req, resp, end){
 	var form = new formidable.IncomingForm();
-	console.info(form.uploadDir);
+	
 	form.keepExtensions = true;
 	form.uploadDir = __dirname + '/static/files';
-	form.parse(req, function(err, fields, files){
 
+	form.parse(req, function(err, fields, files){
 		if(err){
 			end(err);
 			return;
 		}
 
-		fs.rename(uploadedPath, form.uploadDir + '/' + files['file'].name, function(err){
+		fs.rename(files['file'].path, form.uploadDir + '/' + files['file'].name, function(err){
 			var back = {};
 			if(err){
 				end(err);
 				return;
 			}
-			back.path = form.uploadDir + '/' + files['file'].name;
-			end(0, {view : 'upload', data : back});
+			back.filePath = form.uploadDir + '/' + files['file'].name;
+			end(0, {data : back});
 		});
 	});
 }

@@ -5,15 +5,44 @@
 	<title>西祠前端自动化构建平台</title>
 	<link rel="stylesheet" href="<%=static %>/css/normalize.css">
 	<link rel="stylesheet" href="<%=static %>/css/base.css">
+	<style>
+	form{
+		display: inline-block;
+	}
+	</style>
 </head>
 <body>
 	<h1>西祠前端自动化构建平台</h1>
 	<p>西祠前端团队出品, 服务器时间: <%=time %></p>
 	<form action="/upload" method="post" enctype="multipart/form-data">
-		<input type="file" name="file"/>
+		<input id="J_file" type="file" name="file"/>
 		<input type="text" name="user" value="test"/>
 		<input type="text" name="pass" value="123"/>
-		<button type="submit">提交</button>
+		<button type="submit">同步提交</button>
 	</form>
+	<button onclick="uploader.upload();">异步提交</button>
+
+	<script src="//m1.xici.net/f2ewgts/fileuploader/src/main.js"></script>
+	<script>
+	var uploader = new FileUpload({
+		url : '/upload',
+		fileTypes : 'js|zip',
+		onCompleted : function(resp){
+			console.info(resp);
+		},
+		onFileSelected : function(key, file){
+			console.info(key, file);
+		}
+	});
+
+	document.getElementById('J_file').onchange = function(e){
+		if(e.target.files.length){
+			var file = e.target.files[0];
+			// console.info(file);
+			uploader.addFile('file', file, this);
+			// uploader.upload();
+		}
+	}
+	</script>
 </body>
 </html>
