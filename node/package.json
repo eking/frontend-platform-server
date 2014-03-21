@@ -1,0 +1,10 @@
+{
+    "name": "xici-f2etool-server",
+    "version": "0.1.0",
+    "description": "code build server by xici front-end team.",
+    "dependencies": {
+        "ejs" : "0.8.5",
+        "formidable" : "1.0.14"
+    },
+    "author": "ray"
+}

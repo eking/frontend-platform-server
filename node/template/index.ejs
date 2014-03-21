@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>西祠前端自动化构建平台</title>
+	<link rel="stylesheet" href="<%=static %>/css/normalize.css">
+	<link rel="stylesheet" href="<%=static %>/css/base.css">
+</head>
+<body>
+	<h1>西祠前端自动化构建平台</h1>
+	<p>西祠前端团队出品, 服务器时间: <%=time %></p>
+	<form action="/upload" method="post" enctype="multipart/form-data">
+		<input type="file" name="file"/>
+		<input type="text" name="user" value="test"/>
+		<input type="text" name="pass" value="123"/>
+		<button type="submit">提交</button>
+	</form>
+</body>
+</html>
