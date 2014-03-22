@@ -1,10 +1,7 @@
 var http = require('http')
 	, ejs = require('ejs')
 	, staticServerPrefix
-	, router = {
-		'/' : 'index',
-		'post:/upload' : 'upload'
-	}
+	, router
 	, handler = require('./handler');
 
 /**
@@ -14,13 +11,13 @@ var http = require('http')
  * @param  {[type]} resp    [http response]
  */
 function actionWrapper(handler, req, resp){
-	handler(req, resp, function(err, renderData){
+	handler(req, resp, function(err, view, data){
 		if(err){
 			resp.writeHead(500, {'Content-Type' : 'text/plain'});
 			resp.end(err+'');
 			return;
 		}
-		onResponse(req, resp, renderData);
+		onResponse(req, resp, {view : view, data : data});
 	});
 }
 
@@ -76,7 +73,8 @@ function onResponse(req, resp, renderData){
 	});
 }
 
-exports.start = function(option){
+exports.start = function(option, routerDefinition){
+	router = routerDefinition;
 	http.createServer(onRequest).listen(option.serverPort, option.serverHost);
-	staticServerPrefix = '//' + option.staticHost + ':' + option.staticFileServerPort + '/static';
+	staticServerPrefix = exports.staticServer = '//' + option.staticHost + ':' + option.staticFileServerPort + '/static';
 }

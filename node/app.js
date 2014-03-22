@@ -1,11 +1,16 @@
-var server = require('./server')
-  	, staticServer = require('./static_server')
-	, config = {
-		serverPort : 3000,
-		serverHost : 'localhost',
-		staticFileServerPort : 4000,
-		staticHost : 'localhost'
-	};
+var server = require('./server');
+var staticServer = require('./static_server');
+var config = {
+	serverPort: 3000,
+	serverHost: 'localhost',
+	staticFileServerPort: 4000,
+	staticHost: 'localhost'
+};
+var router = {
+	'/': 'index',
+	'post:/upload': 'upload',
+	'/history' : 'showHistory'
+};
 
-server.start(config);
+server.start(config, router);
 staticServer.start(config);

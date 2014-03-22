@@ -5,6 +5,7 @@
 	<title>西祠前端自动化构建平台</title>
 	<link rel="stylesheet" href="<%=static %>/css/normalize.css">
 	<link rel="stylesheet" href="<%=static %>/css/base.css">
+
 	<style>
 	form{
 		display: inline-block;
@@ -22,7 +23,7 @@
 	</form>
 	<button onclick="uploader.upload();">异步提交</button>
 
-	<script src="//m1.xici.net/f2ewgts/fileuploader/src/main.js"></script>
+	<script src="<%=static %>/js/widget-fileuploader.js"></script>
 	<script>
 	var uploader = new FileUpload({
 		url : '/upload',
@@ -44,5 +45,6 @@
 		}
 	}
 	</script>
+	
 </body>
 </html>

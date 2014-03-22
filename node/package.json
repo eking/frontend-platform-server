@@ -4,7 +4,9 @@
     "description": "code build server by xici front-end team.",
     "dependencies": {
         "ejs" : "0.8.5",
-        "formidable" : "1.0.14"
+        "formidable" : "1.0.14",
+        "uglify-js" : "2.4.13",
+        "iconv-lite" : "0.2.11"
     },
     "author": "ray"
 }
