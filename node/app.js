@@ -1,5 +1,5 @@
 var server = require('./server');
-var staticServer = require('./static_server');
+
 var config = {
 	serverPort: 3000,
 	serverHost: 'localhost',
@@ -12,6 +12,7 @@ var config = {
 		password : ''
 	}
 };
+
 var router = {
 	'/': 'index',
 	'post:/upload': 'upload',
@@ -20,4 +21,3 @@ var router = {
 };
 
 server.start(config, router);
-staticServer.start(config);

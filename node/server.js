@@ -76,6 +76,8 @@ function onResponse(req, resp, renderData){
 exports.start = function(option, routerDefinition){
 	router = routerDefinition;
 	http.createServer(onRequest).listen(option.serverPort, option.serverHost);
+	
+	require('./static_server').start(option);
 	staticServerPrefix = exports.staticServer = '//' + option.staticHost + ':' + option.staticFileServerPort + '/static';
 
 	io = require('socket.io').listen(option.socketioPort);
