@@ -1,6 +1,7 @@
 var http = require('http')
 	, ejs = require('ejs')
 	, staticServerPrefix
+	, socketioServerPrefix
 	, router = null
 	, handler = require('./handler');
 
@@ -69,7 +70,10 @@ function onResponse(req, resp, renderData){
 
 	// render template
 	var data = renderData.data || {};
-	data['static'] = staticServerPrefix;
+
+	data['STATIC_SERVER'] = staticServerPrefix;
+	data['SOCKETIO_SERVER'] = socketioServerPrefix;
+
 	ejs.renderFile('./template/'+renderData.view+'.ejs', data, function(err, html){
 		if(err){
 			resp.writeHead(500, {'Content-Type' : 'text/plain'});
@@ -85,7 +89,8 @@ exports.start = function(option, routerDefinition){
 	http.createServer(onRequest).listen(option.serverPort, option.serverHost);
 	
 	require('./static_server').start(option);
-	staticServerPrefix = exports.staticServer = '//' + option.staticHost + ':' + option.staticFileServerPort + '/static';
+	staticServerPrefix = exports.staticServer = '//' + option.staticServerHost + ':' + option.staticFileServerPort + '/static';
+	socketioServerPrefix = '//127.0.0.1:' + option.socketioPort;
 
 	io = require('socket.io').listen(option.socketioPort);
 	io.sockets.on('connection', function(socket){
@@ -116,4 +121,5 @@ exports.start = function(option, routerDefinition){
 		}
 	};
 	exports.db = db;
+	exports.uploadDir = option.uploadDir;
 }

@@ -3,22 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title>西祠前端自动化构建平台</title>
-	<link rel="stylesheet" href="<%=static %>/css/normalize.css">
-	<link rel="stylesheet" href="http://m1.xici.net/f2ewgts/basecss/base.css">
-	
+	<link rel="stylesheet" href="<%= STATIC_SERVER %>/basecss/src/normalize.css">
+	<link rel="stylesheet" href="<%= STATIC_SERVER %>/basecss/src/base.css">
 	<style>
-	body{
-		font: normal normal 12px/20px 'arial';
-		padding: 50px;
-	}
-	h4, p {
-		margin: 0;
-		padding: 0
-	}
-	ul, ol{
-		margin: 0;
-		padding: 0 0 0 20px;
-	}
+	body{font: normal normal 12px/20px 'arial';padding: 50px;}
 	.console{
 		border: 1px solid #bbb;
 		color: #000;
@@ -60,10 +48,22 @@
 		width: 40px;
 	}
 	</style>
+
+	<script src="<%= STATIC_SERVER %>/fileuploader/src/main.js"></script>
+	<script src="<%= STATIC_SERVER %>/ajax/src/main.js"></script>
+	<script src="<%= STATIC_SERVER %>/utils/date/src/main.js"></script>
+
+	<script src="<%= SOCKETIO_SERVER %>/socket.io/socket.io.js"></script>
+	<script>
+	SOCKETIO_SERVER = '<%= SOCKETIO_SERVER %>';
+	</script>
 </head>
 <body>
+	
+
 	<h1>西祠前端自动化构建平台</h1>
 	<p>服务器时间: <%=time %></p>
+	<br>
 	<form id="J_form" action="/upload" method="post" enctype="multipart/form-data">
 		<input id="J_file" type="file" name="file"/>
 		<input id="J_encoding" class="mini" placeholder="编码" id="Encoding" type="text" name="encoding" value=""/><span class="tip_info">默认编码：UTF8</span>
@@ -83,18 +83,7 @@
 	</div><!-- clearfix -->
 	
 
-	<!-- <script src="<%=static %>/js/widget-fileuploader.js"></script> -->
-	<script src="http://m1.xici.net/f2ewgts/fileuploader/src/main.js"></script>
-	<script src="http://m1.xici.net/f2ewgts/ajax/src/main.js"></script>
-	<script src="http://m1.xici.net/f2ewgts/utils/date/src/main.js"></script>
-
-	<script src="http://localhost:5000/socket.io/socket.io.js"></script>
 	<script>
-	SOCKETIO_SERVER = 'http://localhost:5000';
-	</script>
-
-	<script>
-
 	var historyWrapper = document.getElementById('J_history');
 	function ajaxHistory(){
 		ajax({

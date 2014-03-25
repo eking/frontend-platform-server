@@ -1,0 +1,12 @@
+body, div, dl, dt, dd, li, h1, h2, h3, h4, h5, h6, form, input, p { margin: 0; padding: 0 }
+img{ border: 0 }
+ul, ol{margin:0; padding: 0 0 0 20px;}
+
+.pull-left{float: left;}
+.pull-right{float: right;}
+
+.clearfix:after{clear: both;content: "";display: block;height: 0;visibility: hidden;}
+.clearfix{overflow: hidden;}
+* html .clearfix{height: 1%;}
+
+.hide{display: none;}

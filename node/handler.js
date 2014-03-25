@@ -13,7 +13,7 @@ exports.upload = function(req, resp, callback){
 	var db = server.db;
 
 	form.keepExtensions = true;
-	form.uploadDir = __dirname + '/static/files';
+	form.uploadDir = server.uploadDir;
 
 	form.parse(req, function(err, fields, files){
 		if(err){
@@ -43,7 +43,7 @@ exports.upload = function(req, resp, callback){
 
 				broadcast.success(files['file'].name + ' 构建成功!');
 				
-				var path = server.staticServer + '/files/' + filename;
+				var path = server.staticServer + '/UPLOAD_FILES/' + filename;
 				db.history.insert({url : path, fileName : filename, createdAt: (new Date).getTime()}, function(err, saved){
 					if(err){
 						console.error('[ERROR]', '历史记录存储失败');

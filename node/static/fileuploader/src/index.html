@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FileUploader</title>
+	<meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <meta content="telephone=no" name="format-detection" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+	<meta id="J_metaView" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=yes" name="viewport" />
+	<style>
+	img{
+		width: 100%;
+	}
+	.img-inner{
+		overflow: hidden;
+		height: 100%;
+	}
+	.img-box{
+		width: 300px;
+		height: 160px;
+		background: #eee;
+		border: 1px solid #ccc;
+		overflow: hidden;
+		position: relative;
+		float: left;
+		margin: 5px 0 0 5px;
+		padding: 5px 5px 20px 5px;
+	}
+	#imgWrapper{
+		margin-top: 50px;
+	}
+	</style>
+</head>
+<body>
+	<form action="">
+		<input type="file" name="file1" accept="image/*"/>
+		<!-- <input type="file" name="file2" accept="image/*" id="takePic"/> -->
+	</form>
+	<br >
+	<button onclick="uploader.upload();">提交</button>
+	
+	<div id="imgWrapper">
+		
+	</div>
+	
+	<script src="//imgs.xici.net/_js/jquery-1.7.1.min.js"></script>
+	<script src="main.js"></script>
+	<script>
+
+	var imgWrapper = document.getElementById('imgWrapper');
+	
+	function template(name, url) {
+		var tmpl = '';
+		// tmpl += '	<div class="img-box">';
+		tmpl += '		<div class="img-inner">';
+		tmpl += '			<img src="' + url + '" alt="">';
+		tmpl += '		</div>';
+		tmpl += '		<a href="###" data-name="'+name+'">删除</a>';
+		// tmpl += '	</div>';
+
+		var div = document.createElement('div');
+		div.className = 'img-box';
+		div.id = 'J_h5upl' + name;
+		div.innerHTML = tmpl;
+		return div;
+	}
+
+	var uploader = new FileUpload({
+		url: 'upload.php',
+		fileTypes : 'jpg',
+		onFileSelected: function(name, file, dataurl) {
+			var img = document.getElementById('J_h5upl' + name);
+			if(img){
+				imgWrapper.removeChild(img);
+			}
+			imgWrapper.appendChild(template(name, dataurl));
+		},
+		onFileSelectedIE9 : function(fileInput){
+			console.info('模拟在IE9及以下选中文件', fileInput);
+		},
+		onCompleted : function(data){
+			alert('成功，请看控制台');
+			console.info(data);
+		}
+	});
+
+	var takePictures = document.getElementsByTagName("input");
+	for (var i = 0, l = takePictures.length; i < l; i++) {
+		takePictures.item(i).onchange = function(e) {
+			if(e.target.files){
+				if(e.target.files.length){
+					uploader.addFile(this.name, e.target.files[0], this);
+				}
+			}else{
+				uploader.addFile(this.name, null, this);
+			}
+		};
+	}
+
+	imgWrapper.onclick = function(e){
+		var tar = e.target
+			, name = tar.getAttribute('data-name');
+		if(tar.nodeName === 'A' && name){
+			var parent = tar.parentNode;
+			parent.parentNode.removeChild(parent);
+			uploader.removeFile(name);
+		}
+	}
+	</script>
+</body>
+</html>
