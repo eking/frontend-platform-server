@@ -4,11 +4,24 @@
 	<meta charset="UTF-8">
 	<title>西祠前端自动化构建平台</title>
 	<link rel="stylesheet" href="<%=static %>/css/normalize.css">
-	<link rel="stylesheet" href="<%=static %>/css/base.css">
-
+	<link rel="stylesheet" href="http://m1.xici.net/f2ewgts/basecss/base.css">
+	
 	<style>
+	body{
+		font: normal normal 12px/20px 'arial';
+		padding: 50px;
+	}
 	form{
 		display: inline-block;
+	}
+	#J_console{
+		display: block;
+		width: 600px;
+		height: 200px;
+		margin: 20px 0;
+		border: 1px solid #bbb;
+		color: #000;
+		padding: 10px;
 	}
 	</style>
 </head>
@@ -22,8 +35,16 @@
 		<button type="submit">同步提交</button>
 	</form>
 	<button onclick="uploader.upload();">异步提交</button>
+	
+	<div id="J_console" cols="30" rows="10"></div>
 
 	<script src="<%=static %>/js/widget-fileuploader.js"></script>
+	
+	<script src="http://localhost:5000/socket.io/socket.io.js"></script>
+	<script>
+	SOCKETIO_SERVER = 'http://localhost:5000';
+	</script>
+
 	<script>
 	var uploader = new FileUpload({
 		url : '/upload',
@@ -32,9 +53,19 @@
 			console.info(resp);
 		},
 		onFileSelected : function(key, file){
-			console.info(key, file);
+			// console.info(key, file);
 		}
 	});
+
+	var consoleArea = document.getElementById('J_console');
+	function showMsg(msg){
+		var origin = consoleArea.innerHTML;
+		if(!origin){
+			consoleArea.innerHTML = msg;
+		}else{
+			consoleArea.innerHTML = origin + '<br />' + msg;
+		}
+	}
 
 	document.getElementById('J_file').onchange = function(e){
 		if(e.target.files.length){
@@ -44,7 +75,12 @@
 			// uploader.upload();
 		}
 	}
+
+	var socket = io.connect(SOCKETIO_SERVER);
+	socket.on('message', function(data){
+		showMsg(data.msg);
+	});
 	</script>
-	
+
 </body>
-</html>
+</html>	

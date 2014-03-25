@@ -45,3 +45,7 @@ exports.upload = function(req, resp, callback){
 exports.showHistory = function(req, resp, callback){
 	callback(0, 'history', {'title' : '历史记录页面'});
 }
+
+exports.closeServer = function(req, resp, callback){
+	callback(0, 0, {'desc' : '服务器要关了！！！'});
+}

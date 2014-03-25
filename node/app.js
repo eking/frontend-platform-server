@@ -4,12 +4,20 @@ var config = {
 	serverPort: 3000,
 	serverHost: 'localhost',
 	staticFileServerPort: 4000,
-	staticHost: 'localhost'
+	staticHost: 'localhost',
+	socketioPort: 5000,
+	mongodb: {
+		host : '',
+		port : '',
+		name : '',
+		pass : ''
+	}
 };
 var router = {
 	'/': 'index',
 	'post:/upload': 'upload',
-	'/history' : 'showHistory'
+	'/history' : 'showHistory',
+	'/close' : 'closeServer'
 };
 
 server.start(config, router);

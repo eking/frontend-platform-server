@@ -2,7 +2,8 @@ var http = require('http')
 	, ejs = require('ejs')
 	, staticServerPrefix
 	, router
-	, handler = require('./handler');
+	, handler = require('./handler')
+	, socketio = require('socket.io');
 
 /**
  * Will called before handler excution
@@ -77,4 +78,9 @@ exports.start = function(option, routerDefinition){
 	router = routerDefinition;
 	http.createServer(onRequest).listen(option.serverPort, option.serverHost);
 	staticServerPrefix = exports.staticServer = '//' + option.staticHost + ':' + option.staticFileServerPort + '/static';
+
+	var io = socketio.listen(option.socketioPort);
+	io.sockets.on('connection', function(socket){
+		io.sockets.emit('message', {'msg' : '欢迎使用西祠前端自动化平台'});
+	});
 }
