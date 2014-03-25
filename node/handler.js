@@ -34,7 +34,7 @@ exports.upload = function(req, resp, callback){
 			
 			// 执行压缩
 			broadcast.info(files['file'].name + ' 转存成功, 开始压缩...');
-			uglify.run(form.uploadDir + '/' + files['file'].name, fields['encoding'], function(err, filePath){
+			uglify.run(form.uploadDir + '/' + files['file'].name, fields['encoding'], function(err, filename){
 				if(err){
 					callback(err, 'json');
 					broadcast.error('构建压缩失败, 失败原因：' + err);
@@ -42,23 +42,25 @@ exports.upload = function(req, resp, callback){
 				}
 
 				broadcast.success(files['file'].name + ' 构建成功!');
-				db.history.insert({filePath : server.staticServer + '/files/' + filePath, createdAt : (new Date).getTime()}, function(err, saved){
+				
+				var path = server.staticServer + '/files/' + filename;
+				db.history.insert({url : path, fileName : filename, createdAt: (new Date).getTime()}, function(err, saved){
 					if(err){
 						console.error('[ERROR]', '历史记录存储失败');
 					}
 				});
-				callback(0, 0, {filePath : server.staticServer + '/files/' + filePath});
+				callback(0, 0, {url : path, fileName : filename});
 			});
 
 		});
 
 	});
-
 }
 
 exports.history = function(req, resp, callback){
 	var db = server.db;
-	db.history.find(function(err, records){
+	// db.history.find(function(err, records){
+	db.history.find().sort({createdAt : -1}, function(err, records){
 		if(err){
 			callback(err, 'json');
 			return;
@@ -66,8 +68,4 @@ exports.history = function(req, resp, callback){
 
 		callback(0, 0, records);
 	});
-}
-
-exports.closeServer = function(req, resp, callback){
-	callback(0, 0, {'desc' : '服务器要关了！！！'});
 }

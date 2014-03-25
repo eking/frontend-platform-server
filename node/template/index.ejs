@@ -11,16 +11,42 @@
 		font: normal normal 12px/20px 'arial';
 		padding: 50px;
 	}
-	#J_console{
-		display: block;
-		width: 600px;
-		height: 200px;
-		margin: 20px 0;
+	h4, p {
+		margin: 0;
+		padding: 0
+	}
+	ul, ol{
+		margin: 0;
+		padding: 0 0 0 20px;
+	}
+	.console{
 		border: 1px solid #bbb;
 		color: #000;
+		margin: 20px 0;
 		padding: 10px;
+		overflow-x: hidden;
+		overflow-y: auto;
 	}
-
+	.console:before,
+	.console:after{
+		content: "";
+		overflow: hidden;
+	}
+	.main_console{
+		display: block;
+		width: 400px;
+		height: 200px;
+	}
+	.history_console{
+		height: 200px;
+		width: 300px;
+		margin-left: 10px;
+		word-wrap: break-word;
+	}
+	time{
+		float: right;
+		color: #ccc;
+	}
 	form .tip_info{
 		display: inline-block;
 		color: #bbb;
@@ -40,32 +66,67 @@
 	<p>服务器时间: <%=time %></p>
 	<form id="J_form" action="/upload" method="post" enctype="multipart/form-data">
 		<input id="J_file" type="file" name="file"/>
-		<input class="mini" placeholder="编码" id="Encoding" type="text" name="encoding" value=""/><span class="tip_info">默认编码：UTF8</span>
+		<input id="J_encoding" class="mini" placeholder="编码" id="Encoding" type="text" name="encoding" value=""/><span class="tip_info">默认编码：UTF8</span>
 	</form>
 	<br>
-	<button onclick="form.submit();">同步提交</button>
+	<!-- <button onclick="form.submit();">同步提交</button> -->
 	<button onclick="uploader.upload();">异步提交</button>
 	
-	<div id="J_console" cols="30" rows="10"></div>
-
-	<script src="<%=static %>/js/widget-fileuploader.js"></script>
+	<div class="clearfix">
+		<div id="J_console" class="main_console console pull-left" cols="30" rows="10"></div>
+		<div class="pull-left history_console console">
+			<h4>历史记录</h4>
+			<ol id="J_history">
+				<!-- <li><a href="#">xici.ui.common.js</a><time>2014-1-3 12:00:00</time></li> -->
+			</ol>
+		</div>
+	</div><!-- clearfix -->
 	
+
+	<!-- <script src="<%=static %>/js/widget-fileuploader.js"></script> -->
+	<script src="http://m1.xici.net/f2ewgts/fileuploader/src/main.js"></script>
+	<script src="http://m1.xici.net/f2ewgts/ajax/src/main.js"></script>
+	<script src="http://m1.xici.net/f2ewgts/utils/date/src/main.js"></script>
+
 	<script src="http://localhost:5000/socket.io/socket.io.js"></script>
 	<script>
 	SOCKETIO_SERVER = 'http://localhost:5000';
 	</script>
 
 	<script>
-	var form = document.getElementById('J_form');
 
+	var historyWrapper = document.getElementById('J_history');
+	function ajaxHistory(){
+		ajax({
+			url : '/history',
+			success : function(resp){
+				if(resp.r){
+					var len = resp.b.length;
+					var back = ''
+					for(var i = 0; i<len ; i++){
+						back += '<li><a href="'+resp.b[i].url+'" target="_blank">'+resp.b[i].fileName+'</a> <time>'+date.printTime(resp.b[i].createdAt)+'</time></li>';
+					}
+					historyWrapper.innerHTML = back;
+				}
+			}
+		});
+	}
+	ajaxHistory();
+
+	var form = document.getElementById('J_form');
+	var inputEncoding = document.getElementById('J_encoding');
 	var uploader = new FileUpload({
 		url : '/upload',
 		fileTypes : 'js|zip',
 		onCompleted : function(resp){
 			console.info(resp);
+			ajaxHistory();
 		},
 		onFileSelected : function(key, file){
 			// console.info(key, file);
+		},
+		beforeUpload : function(o){
+			this.addField('encoding', inputEncoding.value);
 		}
 	});
 
@@ -91,7 +152,7 @@
 	var socket = io.connect(SOCKETIO_SERVER);
 	socket.on('message', function(data){
 		showMsg(data.msg);
-	});
+	});	
 	</script>
 
 </body>
