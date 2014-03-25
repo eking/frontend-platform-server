@@ -8,6 +8,7 @@ function getMiniPath(fullpath, extension){
 	var ext = extension || '.min';
 	return fullpath.slice(0, lastIdx) + ext + fullpath.slice(lastIdx);
 }
+
 function getFileName(filePath){
 	var lastIdx = filePath.lastIndexOf('/');
 	return filePath.slice(lastIdx+1);
@@ -48,6 +49,7 @@ exports.run = function(fullpath, encoding, callback){
 				callback(err);
 				return;
 			}
+			
 			callback(0, getFileName(mini_path));
 		});
 	});

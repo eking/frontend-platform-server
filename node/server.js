@@ -1,7 +1,7 @@
 var http = require('http')
 	, ejs = require('ejs')
 	, staticServerPrefix
-	, router
+	, router = null
 	, handler = require('./handler');
 
 /**
@@ -12,6 +12,12 @@ var http = require('http')
  */
 function actionWrapper(handler, req, resp){
 	handler(req, resp, function(err, view, data){
+		if(err && view === 'json'){
+			resp.writeHead(500, {'Content-Type' : 'text/plain'});
+			resp.end(JSON.stringify({r : 0, msg : err}));
+			return;
+		}
+
 		if(err){
 			resp.writeHead(500, {'Content-Type' : 'text/plain'});
 			resp.end(err+'');
@@ -56,7 +62,8 @@ function onResponse(req, resp, renderData){
 	// return json
 	if(!renderData.view && renderData.data){
 		resp.writeHead(200, {'Content-Type' : 'text/plain'});
-		resp.end(JSON.stringify(renderData.data));
+		// resp.end(JSON.stringify(renderData.data));
+		resp.end( JSON.stringify({ r: 1, b : renderData.data }) );
 		return;
 	}
 
@@ -94,6 +101,19 @@ exports.start = function(option, routerDefinition){
 	// 	}
 	// });
 	
-	exports.io = io;
+	exports.broadcast = {
+		success : function(msg){
+			// console.info('[SUCCESS]', msg);
+			io.sockets.emit('message', {'msg' : '[成功] ' + msg});
+		},
+		error : function(msg){
+			// console.error('[ERR]', msg);
+			io.sockets.emit('message', {'msg' : '[失败] ' + msg});
+		},
+		info : function(msg){
+			// console.info('[INFO]', msg);
+			io.sockets.emit('message', {'msg' : '[信息] ' + msg});
+		}
+	};
 	exports.db = db;
 }

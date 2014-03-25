@@ -16,7 +16,7 @@ var config = {
 var router = {
 	'/': 'index',
 	'post:/upload': 'upload',
-	'/history' : 'showHistory',
+	'/history' : 'history',
 	'/close' : 'closeServer'
 };
 

@@ -11,9 +11,6 @@
 		font: normal normal 12px/20px 'arial';
 		padding: 50px;
 	}
-	form{
-		display: inline-block;
-	}
 	#J_console{
 		display: block;
 		width: 600px;
@@ -23,17 +20,30 @@
 		color: #000;
 		padding: 10px;
 	}
+
+	form .tip_info{
+		display: inline-block;
+		color: #bbb;
+		margin-left: 10px;
+	}
+	form label{
+		width: 50px;
+		display: inline-block;
+	}
+	form input.mini{
+		width: 40px;
+	}
 	</style>
 </head>
 <body>
 	<h1>西祠前端自动化构建平台</h1>
-	<p>西祠前端团队出品, 服务器时间: <%=time %></p>
-	<form action="/upload" method="post" enctype="multipart/form-data">
+	<p>服务器时间: <%=time %></p>
+	<form id="J_form" action="/upload" method="post" enctype="multipart/form-data">
 		<input id="J_file" type="file" name="file"/>
-		<input type="text" name="user" value="test"/>
-		<input type="text" name="pass" value="123"/>
-		<button type="submit">同步提交</button>
+		<input class="mini" placeholder="编码" id="Encoding" type="text" name="encoding" value=""/><span class="tip_info">默认编码：UTF8</span>
 	</form>
+	<br>
+	<button onclick="form.submit();">同步提交</button>
 	<button onclick="uploader.upload();">异步提交</button>
 	
 	<div id="J_console" cols="30" rows="10"></div>
@@ -46,6 +56,8 @@
 	</script>
 
 	<script>
+	var form = document.getElementById('J_form');
+
 	var uploader = new FileUpload({
 		url : '/upload',
 		fileTypes : 'js|zip',
