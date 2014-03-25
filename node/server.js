@@ -2,8 +2,7 @@ var http = require('http')
 	, ejs = require('ejs')
 	, staticServerPrefix
 	, router
-	, handler = require('./handler')
-	, socketio = require('socket.io');
+	, handler = require('./handler');
 
 /**
  * Will called before handler excution
@@ -79,8 +78,20 @@ exports.start = function(option, routerDefinition){
 	http.createServer(onRequest).listen(option.serverPort, option.serverHost);
 	staticServerPrefix = exports.staticServer = '//' + option.staticHost + ':' + option.staticFileServerPort + '/static';
 
-	var io = socketio.listen(option.socketioPort);
+	io = require('socket.io').listen(option.socketioPort);
 	io.sockets.on('connection', function(socket){
 		io.sockets.emit('message', {'msg' : '欢迎使用西祠前端自动化平台'});
 	});
+
+	db = require('mongojs').connect(option.mongodb.dburl, ['users', 'history']);
+	// db.users.save({email : 'rayzy1991@gmail.com'}, function(err, saved){
+	// 	if(err || !saved){
+	// 		console.info('存储失败' + err);
+	// 	}else{
+	// 		console.info('存储成功！');
+	// 	}
+	// });
+	
+	exports.io = io;
+	exports.db = db;
 }

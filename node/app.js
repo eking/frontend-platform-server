@@ -7,10 +7,9 @@ var config = {
 	staticHost: 'localhost',
 	socketioPort: 5000,
 	mongodb: {
-		host : '',
-		port : '',
-		name : '',
-		pass : ''
+		dburl : 'localhost:27017/test',
+		username : '',
+		password : ''
 	}
 };
 var router = {
