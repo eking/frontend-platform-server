@@ -30,14 +30,19 @@ exports.run = function(fullpath, encoding, callback){
 			return;
 		}
 
+		// 以encoding指定的编码将buffer解码成unicode字符串，字符串为源码
 		var origin_code = iconv.decode(buf, encoding);
 		
+		// 压缩unicode形式的源码，得到压缩后的unicode字符串
 		var minified = uglify.minify(origin_code, {fromString : true, warnings : true});
 		
+		// 以指定encoding编码unicode字符串
 		var gbk_mini_buff = iconv.encode(minified.code, encoding);
 		
+		// 获得压缩后的代码存储路径
 		var mini_path = getMiniPath(fullpath);
 
+		// 将编码后的buffer写入指定文件，这样就会以指定编码写文件而且不会乱码
 		fs.writeFile(mini_path, gbk_mini_buff, function(err){
 			if(err){
 				callback(err);
