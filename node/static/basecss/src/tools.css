@@ -1,41 +1,10 @@
-body{font: normal normal 12px/20px 'arial';padding: 50px;}
-	.console{
-		border: 1px solid #bbb;
-		color: #000;
-		margin: 20px 0;
-		padding: 10px;
-		overflow-x: hidden;
-		overflow-y: auto;
-	}
-	.console:before,
-	.console:after{
-		content: "";
-		overflow: hidden;
-	}
-	.main_console{
-		display: block;
-		width: 400px;
-		height: 200px;
-	}
-	.history_console{
-		height: 200px;
-		width: 300px;
-		margin-left: 10px;
-		word-wrap: break-word;
-	}
-	time{
-		float: right;
-		color: #ccc;
-	}
-	form .tip_info{
-		display: inline-block;
-		color: #bbb;
-		margin-left: 10px;
-	}
-	form label{
-		width: 50px;
-		display: inline-block;
-	}
-	form input.mini{
-		width: 40px;
-	}
+body{color:#666;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;background-color:#f7f7f7}
+.wrap{min-width:800px;max-width:980px;margin:0 auto;position:relative;}
+.header{background-image:-webkit-gradient(linear,left top,left bottom,color-stop(0,#4bade1),color-stop(1,#1e9bdd));background-color:#1e9bdd;border-top:1px solid #63bce8;border-bottom:1px solid #147db7;box-shadow:0 2px 3px 0 #ccc;height:48px;height:48px;color:#fff;}
+.header h1{font:normal 18px/48px 'microsoft yahei';padding-left:10px;position:absolute;left: 0}
+.header h2{text-align:center;font:normal 24px/48px 'microsoft yahei';width:100%}
+.main{margin:20px 10px;}
+.main-menu{float:left;width:180px;background-color:#fff;border:#e0dede 1px solid;padding:0 10px;border-radius:8px;box-shadow:1px 2px 2px #e0dede}
+.main-menu li{height:40px;font:normal 14px/40px 'microsoft yahei';border-bottom:#f0f0f0 1px solid}
+.main-menu a{color:#666;text-decoration:none;display: block;height: 100%}
+.main-page{box-shadow:1px 2px 2px #e0dede;border: 1px solid #e0dede;background-color: #fff;padding:20px;border-radius:8px;margin-left:220px;}
