@@ -1,0 +1,41 @@
+body{font: normal normal 12px/20px 'arial';padding: 50px;}
+	.console{
+		border: 1px solid #bbb;
+		color: #000;
+		margin: 20px 0;
+		padding: 10px;
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
+	.console:before,
+	.console:after{
+		content: "";
+		overflow: hidden;
+	}
+	.main_console{
+		display: block;
+		width: 400px;
+		height: 200px;
+	}
+	.history_console{
+		height: 200px;
+		width: 300px;
+		margin-left: 10px;
+		word-wrap: break-word;
+	}
+	time{
+		float: right;
+		color: #ccc;
+	}
+	form .tip_info{
+		display: inline-block;
+		color: #bbb;
+		margin-left: 10px;
+	}
+	form label{
+		width: 50px;
+		display: inline-block;
+	}
+	form input.mini{
+		width: 40px;
+	}
